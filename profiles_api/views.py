@@ -3,7 +3,9 @@ from rest_framework.response import Response #imports the response object that i
 from rest_framework import status #status object is a list of handy status codes when returning responses from API
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication #adds authentication token to every request we make, kind of like a password
-from rest_framework import filters #out of the box filter modules
+from rest_framework import filters #out of the box filter modules\
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 
 from profiles_api import serializers
 from profiles_api import models
@@ -103,3 +105,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,) #add comma so python knows this is a tuple, not a single item; adds a filter backend for the SearchFilter
     search_fields = ('name', 'email', )
+
+class UserLoginApiView(ObtainAuthToken):
+    """Handle creating user authentication tokens"""
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES #obtainauthtoken class doesn't havev this automatically like others like ModelViewSet
+    
