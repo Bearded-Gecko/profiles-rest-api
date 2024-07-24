@@ -3,6 +3,7 @@ from rest_framework.response import Response #imports the response object that i
 from rest_framework import status #status object is a list of handy status codes when returning responses from API
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication #adds authentication token to every request we make, kind of like a password
+from rest_framework import filters #out of the box filter modules
 
 from profiles_api import serializers
 from profiles_api import models
@@ -100,3 +101,5 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = models.UserProfile.objects.all()
     authentication_classes = (TokenAuthentication,) #add comma after tokenauthentication to create a tuple, instead of a single item; sets how user will authenticate or mechanism they user
     permission_classes = (permissions.UpdateOwnProfile,)
+    filter_backends = (filters.SearchFilter,) #add comma so python knows this is a tuple, not a single item; adds a filter backend for the SearchFilter
+    search_fields = ('name', 'email', )
