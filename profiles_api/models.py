@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser #needed to customize/overwrite the default user django model
 from django.contrib.auth.models import PermissionsMixin #needed to customize/overwrite the default user django model
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings #used to retrieve settings.py from djangoproject settings
 
 
 class UserProfileManager(BaseUserManager): #so django knows how to work with the custom userprofile class
@@ -53,3 +54,16 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """Return string representation of our user"""
         return self.email
+
+class ProfileFeedItem(models.Model):
+    """Profile status update"""
+    user_profile = models.ForeignKey( #profile that owns or created the user profile feed item
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE #on delete tells db what to do when remote field is deleted; cascades changes down the field, i.e., if user is deleted it cascades to their feed items
+    )
+    status_text = models.CharField(max_length=255) #status update or content of the feed item
+    created_on = models.DateTimeField(auto_now_add=True) #automatically set to current time when item was created
+
+    def __str__(self):
+        """Return the model as a string"""
+        return self.status_text
