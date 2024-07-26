@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'tuovi%^#1-m(qq*cn9n3k4p9ga#edps#z74=-x8rew@e5h)g#5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 1))) #1 is the default value if debug variable doesn't exist, but it does exist in supervise_profiles_api.conf; does not exist in our local code
 
 ALLOWED_HOSTS = []
 
@@ -123,3 +123,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'profiles_api.UserProfile'
+
+STATIC_ROOT = 'static/' #location where django stores all static files when we run our collectstatic command
